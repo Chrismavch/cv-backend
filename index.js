@@ -84,3 +84,31 @@ app.get('/api/cvs', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+
+// Endpoint to retrieve filtered CVs by category
+app.get('/api/cvs', (req, res) => {
+  const category = req.query.category;
+  const dataPath = path.join(__dirname, 'data');
+
+  if (!fs.existsSync(dataPath)) {
+    return res.json([]);
+  }
+
+  const files = fs.readdirSync(dataPath);
+  const result = [];
+
+  files.forEach(file => {
+    if (file.endsWith('.json')) {
+      const content = fs.readFileSync(path.join(dataPath, file), 'utf-8');
+      const parsed = JSON.parse(content);
+
+      // If category is provided, match it
+      if (!category || (parsed.category && parsed.category === category)) {
+        result.push(parsed);
+      }
+    }
+  });
+
+  res.json(result);
+});
