@@ -62,6 +62,24 @@ app.post('/api/upload', upload.single('cv'), (req, res) => {
   res.json({ message: 'CV uploaded successfully' });
 });
 
+
+app.get('/api/cvs', (req, res) => {
+  const dataDir = path.join(__dirname, 'data');
+  if (!fs.existsSync(dataDir)) return res.json([]);
+
+  const files = fs.readdirSync(dataDir);
+  const cvs = files
+    .filter(f => f.endsWith('.json'))
+    .map(filename => {
+      const raw = fs.readFileSync(path.join(dataDir, filename), 'utf8');
+      const json = JSON.parse(raw);
+      return { ...json, filename };
+    });
+
+  res.json(cvs);
+});
+
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
