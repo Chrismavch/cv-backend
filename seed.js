@@ -2,9 +2,9 @@
 import fs from 'fs';
 import path from 'path';
 
+// Dummy data pools
 const greekNames = ['Γιώργος', 'Ελένη', 'Νίκος', 'Μαρία', 'Κώστας', 'Ανδριάνα', 'Σοφία', 'Αλέξανδρος', 'Ιωάννα', 'Θανάσης'];
 const surnames = ['Παπαδόπουλος', 'Νικολάου', 'Δημητρίου', 'Αθανασίου', 'Χατζής', 'Κωνσταντίνου', 'Γεωργίου', 'Μαρκόπουλος'];
-
 const experiences = [
   'Ψήστης με εμπειρία σε κάρβουνο & γκριλ',
   'Σερβιτόρος σε εστιατόριο 5 αστέρων',
@@ -17,25 +17,39 @@ const experiences = [
   'Μοντέρ περιεχομένου για short-form videos',
   'Παρουσιαστής εκπαιδευτικών βίντεο στο YouTube'
 ];
+// New categories pool
+const categories = [
+  'Πληροφορική',
+  'Διοίκηση Επιχειρήσεων',
+  'Μάρκετινγκ',
+  'Εστίαση',
+  'Barista',
+  'Content Creation',
+  'Social Media'
+];
 
-const dummyFolder = path.join('./data');
+// Ensure data folder exists
+const dummyFolder = path.join(__dirname, 'data');
 if (!fs.existsSync(dummyFolder)) fs.mkdirSync(dummyFolder);
 
 for (let i = 0; i < 20; i++) {
   const name = `${greekNames[Math.floor(Math.random() * greekNames.length)]} ${surnames[Math.floor(Math.random() * surnames.length)]}`;
   const email = `${name.toLowerCase().replace(/\s+/g, '.')}@demo.gr`;
   const experience = experiences[Math.floor(Math.random() * experiences.length)];
-  const timestamp = Date.now() + i; // Ensure unique timestamp
+  const category = categories[Math.floor(Math.random() * categories.length)];
+  const timestamp = Date.now() + i; // unique
   const filename = `${timestamp}-${name.replace(/\s+/g, '_')}.json`;
 
   const cvData = {
     name,
     email,
     experience,
+    category,
+    // assume a placeholder PDF exists or will be uploaded
     filePath: `uploads/${timestamp}-${name.replace(/\s+/g, '_')}.pdf`
   };
 
   fs.writeFileSync(path.join(dummyFolder, filename), JSON.stringify(cvData, null, 2));
 }
 
-console.log('✅ 20 Dummy CVs with restaurant and content creator roles generated!');
+console.log('✅ 20 Dummy CVs with categories generated!');
