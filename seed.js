@@ -3,15 +3,14 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Ορισμός __dirname σε ES module
+// __dirname για ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Dummy δεδομένα
-const greekNames = ['Γιώργος', 'Ελένη', 'Νίκος', 'Μαρία', 'Κώστας', 'Ανδριάνα', 'Σοφία', 'Αλέξανδρος', 'Ιωάννα', 'Θανάσης'];
-const surnames   = ['Παπαδόπουλος', 'Νικολάου', 'Δημητρίου', 'Αθανασίου', 'Χατζής', 'Κωνσταντίνου', 'Γεωργίου', 'Μαρκόπουλος'];
-
-const experiences = [
+const greekNames   = ['Γιώργος','Ελένη','Νίκος','Μαρία','Κώστας','Ανδριάνα','Σοφία','Αλέξανδρος','Ιωάννα','Θανάσης'];
+const surnames     = ['Παπαδόπουλος','Νικολάου','Δημητρίου','Αθανασίου','Χατζής','Κωνσταντίνου','Γεωργίου','Μαρκόπουλος'];
+const experiences  = [
   'Ψήστης με εμπειρία σε κάρβουνο & γκριλ',
   'Σερβιτόρος σε εστιατόριο 5 αστέρων',
   'Barista με γνώσεις latte art',
@@ -23,33 +22,28 @@ const experiences = [
   'Μοντέρ περιεχομένου για short-form videos',
   'Παρουσιαστής εκπαιδευτικών βίντεο στο YouTube'
 ];
+// Ορίζουμε τις κατηγορίες
+const categories   = ['Εστίαση','Καφές/Barista','Διανομή','Content Creation','Digital Marketing'];
 
-// Φάκελος αποθήκευσης
-const dummyFolder = path.join(__dirname, 'data');
-if (!fs.existsSync(dummyFolder)) fs.mkdirSync(dummyFolder, { recursive: true });
+const outDir = path.join(__dirname, 'data');
+if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
-// Δημιουργία 20 τυχαίων CV
 for (let i = 0; i < 20; i++) {
-  const name       = `${greekNames[Math.floor(Math.random() * greekNames.length)]} ${surnames[Math.floor(Math.random() * surnames.length)]}`;
-  const email      = `${name.toLowerCase().replace(/\s+/g, '.')}@demo.gr`;
-  const experience = experiences[Math.floor(Math.random() * experiences.length)];
+  const name       = `${greekNames[Math.floor(Math.random()*greekNames.length)]} ${surnames[Math.floor(Math.random()*surnames.length)]}`;
+  const email      = `${name.toLowerCase().replace(/\s+/g,'.')}@demo.gr`;
+  const experience = experiences[Math.floor(Math.random()*experiences.length)];
+  const category   = categories[Math.floor(Math.random()*categories.length)];
   const timestamp  = Date.now() + i;
-  const safeName   = name.replace(/\s+/g, '_');
+  const safeName   = name.replace(/\s+/g,'_');
   const filename   = `${timestamp}-${safeName}.json`;
 
-  const cvData = {
-    name,
-    email,
-    experience,
-    // φανταστική διαδρομή σε PDF (δεν δημιουργούμε πραγματικό PDF)
-    filePath: `uploads/${timestamp}-${safeName}.pdf`
-  };
+  const cvData = { name, email, experience, category, filePath: `uploads/${timestamp}-${safeName}.pdf` };
 
   fs.writeFileSync(
-    path.join(dummyFolder, filename),
+    path.join(outDir, filename),
     JSON.stringify(cvData, null, 2),
     'utf8'
   );
 }
 
-console.log('✅ 20 Dummy CVs with restaurant and content creator roles generated!');
+console.log('✅ 20 Dummy CVs with categories generated!');
